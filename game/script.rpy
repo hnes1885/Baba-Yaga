@@ -18,6 +18,7 @@ default affection = 0
 default spinning = 0
 default reading = 0
 default foraging = 0
+default necklace = False
 
 init python:
     def click_counter():
@@ -65,15 +66,16 @@ screen click_counter_game:
             imagebutton idle "play-again-button.png" align(0.5, 0.84) action Function(reset_click_counter) at button_hover
         elif clicks < 20: # 10-19
             text "This is still not enough." align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
+            imagebutton idle "play-again-button.png" align(0.5, 0.84) action Function(reset_click_counter) at button_hover
         elif clicks < 30: # 20-29
-            text "Wow, you're fast!" align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
-            
+            text "I need just a bit more." align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
+            imagebutton idle "play-again-button.png" align(0.5, 0.84) action Function(reset_click_counter) at button_hover
         else: # 30 or more.
             text "You've got skills!" align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
+            textbutton "End" align(0.5, 0.84) action Return()
             
-            
-        #imagebutton idle "play-again-button.png" align(0.5, 0.84) action Function(reset_click_counter) at button_hover
-        textbutton "End" align(0.5, 0.84) action Return()
+        imagebutton idle "play-again-button.png" align(0.5, 0.24) action Function(reset_click_counter) at button_hover
+        #textbutton "End" align(0.5, 0.84) action Return()
 
     if timer:
         timer 1.0 action If(countdown > 0, SetVariable("countdown", countdown - 1), SetVariable("count_clicks", False)) repeat countdown > 0
@@ -159,6 +161,7 @@ label gointoforest:
             jump beg
         "Stand her ground and raise her voice":
             #add +1 to respect variable
+            $ respect += 1
             jump standground
 
 label beg:
@@ -176,9 +179,11 @@ label beg:
 
         "Stand her ground":
             #add +1 to respect variable
+            $ respect += 1
             jump standground
         "Offer her labor in exchange":
             #add +1 to respect variable
+            $ respect += 1
             jump offerwork
 
 label standground:
@@ -209,10 +214,14 @@ label tasks:
     "I can..."
     menu:
         "Forage":
+            $ foraging += 1
             jump forage
         "Read":
+            $ reading += 1
             jump read
         "Spin yarn":
+            $ spinning += 1
+            "spinning is now: [spinning]" #delete this later
             jump spin
     
 
@@ -222,6 +231,8 @@ label forage:
     #followed by scene with baba yaga to establish character relationship development
     #will need to create an inventory for this part of the game
     "drag and drop minigame"
+    $ necklace = True
+    "necklace is obtained: [necklace]"
     jump tasks
 
 label read:
@@ -238,46 +249,68 @@ label read:
 label spin:
     #a spindle minigame where you can spin yarn and make cloth
     #followed by scene with baba yaga to establish character relationship development
-    "timer click minigame"
-    call screen click_counter_game
-    "After a long day of spinning yarn, [v] showed the older woman her progress."
-    "Baba Yaga sniffed in mild approval, glancing over the mountain of spool the young woman had managed to spin."
-    show ba at right
-    baba "Good enough..."
-    hide ba
-    "Her eyes briefly took in the state of the girl's hands."
-    show ba at right
-    baba "Up with you now. I'll have anothr task for you tomorrow at dawn."
-    hide ba
-    "[v] stood up from her seat."
-    show vas at left
-    v "But my father--"
-    hide vas
-    show ba at right
-    baba "Your father will be fine."
-    hide ba
-    "The witch waved her hand dismissively."
-    show vas at left
-    v "You don't understand. When I left him he had a chill and was bed ridden." 
-    v "He's unable to care for himself. If I don't return soon--"
-    hide vas
-    show ba at right
-    baba "As I said, he will be fine. Your father will live if you perform your tasks, girl."
-    baba "Now, you can sleep by the fire tonight. I expect you up and working at dawn."
-    baba "And lotion your hands with the balm on the mantle. I won't tolerate lackluster work from blistered soft hands."
-    hide ba
-    "[v] fell asleep by the fire that night, consumed by worried thoughts for her father."
-    "She prayed he would live through the night."
-    show vas at left
-    v "I'll be home soon, папа."
-    hide vas
-    "She whispered into the embers as she drifted into an exhausted sleep, the wind outside whistling a lullaby."
-    jump nextMorning
+    call screen click_counter_game #call on minigame screen
+    if spinning == 1:
+        "After a long day of spinning yarn, [v] showed the older woman her progress."
+        "Baba Yaga sniffed in mild approval, glancing over the mountain of spool the young woman had managed to spin."
+        show ba at right
+        baba "Good enough..."
+        hide ba
+        "Her eyes briefly took in the state of the girl's hands."
+        show ba at right
+        baba "Up with you now. I'll have another task for you tomorrow at dawn."
+        hide ba
+        "[v] stood up from her seat."
+        show vas at left
+        v "But my father--"
+        hide vas
+        show ba at right
+        baba "Your father will be fine."
+        hide ba
+        "The witch waved her hand dismissively."
+        show vas at left
+        v "You don't understand. When I left him he had a chill and was bed ridden." 
+        v "He's unable to care for himself. If I don't return soon--"
+        hide vas
+        show ba at right
+        baba "As I said, he will be fine. Your father will live if you perform your tasks, girl."
+        baba "Now, you can sleep by the fire tonight. I expect you up and working at dawn."
+        baba "And lotion your hands with the balm on the mantle. I won't tolerate lackluster work from blistered soft hands."
+        hide ba
+        "[v] fell asleep by the fire that night, consumed by worried thoughts for her father."
+        "She prayed he would live through the night."
+        show vas at left
+        v "I'll be home soon, папа."
+        hide vas
+        "She whispered into the embers as she drifted into an exhausted sleep, the wind outside whistling a lullaby."
+        jump nextMorning
+    elif spinning == 2:
+        show ba at right
+        baba "Hmf, decent."
+        hide ba
+        "The old woman groused as she took in the spools of yarn [v] had managed to spin yet again."
+        "Had she not known any better, [v] could have sworn she saw a glint of approval in the woman's eye."
+        $ respect += 2
+        #insert another scene of them bonding briefly before she goes to sleep
+        jump finalMorning
+    elif spinning == 3:
+        "At the end of the final day, [baba] came to inspect the young woman's work yet again."
+        "And again, she could find no fault in the quality of the work the girl had produced."
+        jump afterTasks
 
 label nextMorning:
     "Upon the next morning, just as she had promised, the witch put [v] to work."
     "The cool morning air was enough to chase off any lingering sleep from her body."
-    jump tasks2
+    jump tasks
+
+label finalMorning:
+    "[v] awoke to find herself covered with a second horsehair blanket."
+    "A new snow had fallen upon the forest outside, leaving the chicken leg hut in great need of warmth."
+    "The witch startled her when her slightly raspy voice broke her from her thoughts."
+    show ba at right
+    baba "Waste no more of the day, girl. There's still work to be done."
+    hide ba
+    jump tasks
 
 label tasks2:
     "[baba] had decided to have her..."
@@ -290,23 +323,37 @@ label tasks2:
 
 #rest of story after the tasks are completed:
 label afterTasks:
+    show vas at left
     v "I have completed all the tasks you asked of me, Babushka."
+    hide vas 
     "The witch sniffed at her, hardly glancing up from her pot."
+    show ba at right
     baba "So it seems."
     baba "I suppose you expect the medicine for your sickly father now, eh?"
+    hide ba
     "She sighed through her nose and lifted her spoon from the pot in front of her, laddling a small amount of the brew into a waiting vial before handing it to her."
-    baba "This should be more than enough to cure him of his ailment. Tell your father to look after himself unless he wishes to send his daughter to inconvenience others again."
+    show ba at right
+    baba "This should be more than enough to cure him of his ailment."
+    hide ba
+    "[baba] then took one of the skulls from a fence post and lit it inside before placing it on a stick, impatiently handed it to the young woman."
+    show ba at right
+    baba "This will aid your way home. Take it and be gone."
+    baba "Tell your father to look after himself unless he wishes to send his daughter to inconvenience others again."
     baba "I don't wish for your spoiled hide to darken my doorstep yet again so soon."
-    
+    hide ba
+    show vas at left
     menu:
-        "[v] spoke, taking the vial"
+        "[v] spoke, taking both the vial and the lantern..."
         "Thank you, Babushka":
             #add +1 to respect variable
             #add +1 to affection variable
+            $ affection += 2
             jump thankYou
         "And I have no wish to return so soon and labor under withering eye yet again":
             #add +1 to respect variable
+            $ respect += 1
             #add +1 to affection variable
+            $ affection += 1
             jump snark
 
 #have baba give her a skull light like in the story to guide her way home
@@ -314,17 +361,39 @@ label afterTasks:
 #this will give more emotional impact to their relationship developed over the story
 #note: can only have this choice pop up if respect and affection are above a certain threshold
 label thankYou:
-    "There was a moment of quiet, broken only by the quiet song of the winter wind."
+    "There was a moment of quiet, broken only by the quiet song of the winter wind outside."
+    show ba at right
     baba "Go on now, away with you."
-    "The woman sniffed again as [v] turned to leave the hut."
-    "But she could have sworn she saw a wry smile gracing the witch's face before she stepped out into the night."
-    jump continueToFather
+    hide ba
+    "The woman sniffed again, her voice carrying a distinct lack of venom as [v] turned to leave the hut."
+    "But she could have sworn she caught a wry smile gracing the witch's face before she turned her back and made her way to the edge of the fence."
+    jump leaveNecklace
 label snark:
     "[b]'s laugh was as harsh a bark as her yell, yet it carried with it hardly the same bite."
+    show ba at right
     baba "Go on now, brat, while the night is still young."
     jump thankYou
 
+label leaveNecklace:
+    if necklace == True:
+        "[v] reached the edge of the witch's fence before looking back."
+        "She felt in her pocket the familiar weight of the necklace she had found in the woods."
+        menu:
+            "Keep it":
+                jump continueToFather
+            "Leave it on the fence":
+                "[v] placed the necklace on one of the skulls that lined the fence posts before looking back at the chicken legged hut."
+                "The windows glowed with a similar warmth to the eyes of the lantern skulls."
+                "She hoped in the back of her mind that the witch would see it and know it was a promise to return one day."
+                jump continueToFather
+    else:
+        jump continueToFather
+
 label continueToFather:
+    "As she walked into the wood, [v] found herself strangely comforted with the idea that she would be able to find the witch again, should she ever need to."
+    "She had no basis for this belief. It was simply a thought that felt as certain as the ground beneath her feet and the sky beyond her head."
+    "[baba] would be there, should she ever need her."
+    "Of this, she was certain."
 
 #Bad ending
 label stayathome:
