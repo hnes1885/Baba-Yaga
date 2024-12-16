@@ -290,14 +290,17 @@ screen navigation():
     vbox:
         style_prefix "navigation"
 
+
         xpos gui.navigation_xpos
         yalign 0.5
 
         spacing gui.navigation_spacing
 
         if main_menu:
-
-            textbutton _("Start") action Start()
+            #imagebutton idle "play-again-button.png" action Start()
+            imagebutton auto "gui/mm_start_%s.png" xpos 850 ypos 460 action Start()
+            
+            #textbutton _("Start") action Start()
 
         else:
 
@@ -305,9 +308,11 @@ screen navigation():
 
             textbutton _("Save") action ShowMenu("save")
 
-        textbutton _("Load") action ShowMenu("load")
+        #textbutton _("Load") action ShowMenu("load")
+        imagebutton auto "gui/mm_load_%s.png" xpos 930 ypos 250 action ShowMenu("load")
 
-        textbutton _("Preferences") action ShowMenu("preferences")
+        #textbutton _("Preferences") action ShowMenu("preferences")
+        imagebutton auto "gui/mm_options_%s.png" xpos 990 ypos 110 action ShowMenu("peferences")
 
         if _in_replay:
 
@@ -317,18 +322,18 @@ screen navigation():
 
             textbutton _("Main Menu") action MainMenu()
 
-        textbutton _("About") action ShowMenu("about")
-
-        if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
+        #textbutton _("About") action ShowMenu("about")
+        imagebutton auto "gui/mm_info_%s.png" xpos 1050 ypos 0 action ShowMenu("about")
+        #if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
 
             ## Help isn't necessary or relevant to mobile devices.
-            textbutton _("Help") action ShowMenu("help")
+            #textbutton _("Help") action ShowMenu("help")
 
-        if renpy.variant("pc"):
+        #if renpy.variant("pc"):
 
             ## The quit button is banned on iOS and unnecessary on Android and
             ## Web.
-            textbutton _("Quit") action Quit(confirm=not main_menu)
+            #textbutton _("Quit") action Quit(confirm=not main_menu)
 
 
 style navigation_button is gui_button
@@ -340,6 +345,7 @@ style navigation_button:
 
 style navigation_button_text:
     properties gui.text_properties("navigation_button")
+    #xalign 0.5
 
 
 ## Main Menu screen ############################################################
@@ -385,7 +391,7 @@ style main_menu_frame:
     xsize 420
     yfill True
 
-    background "gui/overlay/main_menu.png"
+    #background "gui/overlay/main_menu.png"
 
 style main_menu_vbox:
     xalign 1.0

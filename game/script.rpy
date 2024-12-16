@@ -71,10 +71,10 @@ screen click_counter_game:
             text "I need just a bit more." align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
             imagebutton idle "play-again-button.png" align(0.5, 0.84) action Function(reset_click_counter) at button_hover
         else: # 30 or more.
-            text "You've got skills!" align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
+            text "This should be enough" align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
             textbutton "End" align(0.5, 0.84) action Return()
             
-        imagebutton idle "play-again-button.png" align(0.5, 0.24) action Function(reset_click_counter) at button_hover
+        imagebutton idle "play-again-button.png" align(0.5, 0.94) action Function(reset_click_counter) at button_hover
         #textbutton "End" align(0.5, 0.84) action Return()
 
     if timer:
@@ -221,7 +221,7 @@ label tasks:
             jump read
         "Spin yarn":
             $ spinning += 1
-            "spinning is now: [spinning]" #delete this later
+            #"spinning is now: [spinning]" #delete this later
             jump spin
     
 
@@ -249,6 +249,7 @@ label read:
 label spin:
     #a spindle minigame where you can spin yarn and make cloth
     #followed by scene with baba yaga to establish character relationship development
+    hide vas
     call screen click_counter_game #call on minigame screen
     if spinning == 1:
         "After a long day of spinning yarn, [v] showed the older woman her progress."
@@ -275,8 +276,9 @@ label spin:
         show ba at right
         baba "As I said, he will be fine. Your father will live if you perform your tasks, girl."
         baba "Now, you can sleep by the fire tonight. I expect you up and working at dawn."
-        baba "And lotion your hands with the balm on the mantle. I won't tolerate lackluster work from blistered soft hands."
+        baba "And lotion your hands with the balm on the mantle. I won't tolerate lackluster work tomorrow because you have blisters."
         hide ba
+        #show background image of fireplace
         "[v] fell asleep by the fire that night, consumed by worried thoughts for her father."
         "She prayed he would live through the night."
         show vas at left
@@ -291,7 +293,40 @@ label spin:
         "The old woman groused as she took in the spools of yarn [v] had managed to spin yet again."
         "Had she not known any better, [v] could have sworn she saw a glint of approval in the woman's eye."
         $ respect += 2
-        #insert another scene of them bonding briefly before she goes to sleep
+        show ba at right
+        baba "That's enough for today."
+        hide ba
+        "Upon leaving the little back room of the hut, [v] was surprised to see the table set with a small meal."
+        "When the old woman told her to sit and eat, she did not protest."
+        "They sat and ate in relative silence until the witch spoke."
+        show ba at right
+        baba "You don't spin very often, do you, girl?"
+        hide ba
+        "[v] glanced up from her bowl, which she had been devouring only a moment before."
+        show vas at left 
+        v "No...It is not my usual work."
+        hide vas
+        show ba at right
+        baba "I expected as much from the state of your palms. Soft as petals."
+        baba "What work do you do then?"
+        hide ba
+        show vas at left
+        v "My father is an apothecary. He has been teaching me to be one for most of my life."
+        hide vas
+        "[b] made a noise of mild disapproval."
+        show ba at right
+        baba "What of your mother? How is she to tolerate a daughter that cannot perform such household responsibilities?"
+        hide ba
+        "A moment passed before [v] answered the woman's question."
+        show vas at left
+        v "My mother passed when I was young."
+        v "My father took me on as an apprentice shortly after. He wanted me to have a skillset that would provide me with enough to get by..."
+        v "In case anything happened to him."
+        hide vas
+        "The witch appeared to have nothing to say to this."
+        "They ate the rest of the meal in silence before it was time to rest for the night."
+        "After cleaning their dishes, [v] went to lay by the fire yet again and found a blanket beside the straw mat on the floor."
+        "Wrapping herself in it and settling into to the warm embrace of the fire, she drifted off."
         jump finalMorning
     elif spinning == 3:
         "At the end of the final day, [baba] came to inspect the young woman's work yet again."
@@ -299,57 +334,56 @@ label spin:
         jump afterTasks
 
 label nextMorning:
+    #show new background image of fireplace fading in for smoother transition to morning
     "Upon the next morning, just as she had promised, the witch put [v] to work."
     "The cool morning air was enough to chase off any lingering sleep from her body."
     jump tasks
 
 label finalMorning:
     "[v] awoke to find herself covered with a second horsehair blanket."
-    "A new snow had fallen upon the forest outside, leaving the chicken leg hut in great need of warmth."
+    "A new snow had fallen upon the forest outside, leaving the chicken leg hut in great need of warmth as the fire had died during the night."
     "The witch startled her when her slightly raspy voice broke her from her thoughts."
     show ba at right
     baba "Waste no more of the day, girl. There's still work to be done."
     hide ba
+    "The witch hobbled outside the hut and climbed into her mortar."
+    show ba at right
+    baba "I expect to find you still working when I return."
+    hide ba
+    "Using her pestal, she launched herself into the air on her mortar, soaring into the treetops."
+    "[v] was left to herself and her work yet again."
     jump tasks
-
-label tasks2:
-    "[baba] had decided to have her..."
-    menu:
-        "Forage":
-            jump forage
-        "Read":
-            jump read
 
 
 #rest of story after the tasks are completed:
 label afterTasks:
     show vas at left
-    v "I have completed all the tasks you asked of me, Babushka."
+    v "I have completed all the tasks you asked of me."
     hide vas 
     "The witch sniffed at her, hardly glancing up from her pot."
     show ba at right
     baba "So it seems."
     baba "I suppose you expect the medicine for your sickly father now, eh?"
     hide ba
-    "She sighed through her nose and lifted her spoon from the pot in front of her, laddling a small amount of the brew into a waiting vial before handing it to her."
+    "She sighed through her nose and lifted her spoon from the pot in front of her, laddling a small amount of the brew into a waiting vial."
     show ba at right
     baba "This should be more than enough to cure him of his ailment."
     hide ba
     "[baba] then took one of the skulls from a fence post and lit it inside before placing it on a stick, impatiently handed it to the young woman."
     show ba at right
     baba "This will aid your way home. Take it and be gone."
-    baba "Tell your father to look after himself unless he wishes to send his daughter to inconvenience others again."
+    baba "And tell your father to look after himself unless he wishes to send his daughter to inconvenience others again."
     baba "I don't wish for your spoiled hide to darken my doorstep yet again so soon."
     hide ba
     show vas at left
     menu:
         "[v] spoke, taking both the vial and the lantern..."
-        "Thank you, Babushka":
+        "Thank you, косынка.":
             #add +1 to respect variable
             #add +1 to affection variable
             $ affection += 2
             jump thankYou
-        "And I have no wish to return so soon and labor under withering eye yet again":
+        "And I have no wish to return so soon and labor under withering eye yet again.":
             #add +1 to respect variable
             $ respect += 1
             #add +1 to affection variable

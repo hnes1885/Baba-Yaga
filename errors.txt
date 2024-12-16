@@ -2,9 +2,9 @@
 errors listed below, and try again.
 
 
-File "game/script.rpy", line 275: expected statement.
-    spinning += 1
-             ^
+File "game/screens.rpy", line 326: vbox expects a non-empty block.
+    if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
+                                                                                     ^
 
 Ren'Py Version: Ren'Py 8.3.3.24111502
-Sun Dec 15 22:35:03 2024
+Mon Dec 16 17:45:01 2024
