@@ -14,6 +14,10 @@ image wheel = "images/Wheel.png"
 #defining stats here that will increase/decrease with character interactions with NPCs and impact the ending of your relationship with the NPCs 
 default respect = 0
 default affection = 0
+#variables to keep track of the tasks completed:
+default spinning = 0
+default reading = 0
+default foraging = 0
 
 init python:
     def click_counter():
@@ -57,10 +61,10 @@ screen click_counter_game:
 
     if not count_clicks: # "count_clicks" is NOT True? If so the countdown timer ran out.
         if clicks < 10: # 0-9
-            text "Try again" align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
+            text "This is hardly enough. Baba Yaga will not be pleased with this amount." align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
             imagebutton idle "play-again-button.png" align(0.5, 0.84) action Function(reset_click_counter) at button_hover
         elif clicks < 20: # 10-19
-            text "That's pretty good!" align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
+            text "This is still not enough." align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
         elif clicks < 30: # 20-29
             text "Wow, you're fast!" align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
             
@@ -180,38 +184,41 @@ label beg:
 label standground:
     show vas at left
     v "I will not! I have walked for hours in the dark and cold to seek your aid and I will not return empty handed to watch my father wither and die because an old crone shooed me away!"
-    
+    hide vas
     "[v]'s voice echoed into the highest branches of the trees, her words frosting in the wicked midnight air."
     
     "Baba Yaga looked the young woman up and down before scoffing through her nose at her."
-
+    show ba at right
     baba "Is that so?"
     baba "Well if you insist on being a brat, I suppose I can offer you something to get you off my hide."
     baba "But make no mistake, girl, I will need something in exchange for your demand of my services."
-
+    hide ba
     jump offerwork
 
 label offerwork:
+    show vas at left
     v "I can work for you."
-
-    baba "Hmmff, you hardly look the type. I need a girl who can work with her hands. What work can you do?"
-
+    hide vas
+    show ba at right
+    baba "Hmf, you hardly look the type. I need a girl who can work with her hands. What work can you do?"
+    hide ba
     jump tasks
 
 label tasks:
+    show vas at left
+    "I can..."
     menu:
-        v "I can..."
-        "Forage and brew medicine":
-            jump forageAndBrew
-        "Read and write":
+        "Forage":
+            jump forage
+        "Read":
             jump read
         "Spin yarn":
             jump spin
     
 
-label forageAndBrew:
+label forage:
     #a foraging mini game 
-    #find a necklace in the forest
+    #find a necklace in the forest --- will be able to take it with or leave it with baba as a promise to return one day
     #followed by scene with baba yaga to establish character relationship development
     #will need to create an inventory for this part of the game
     "drag and drop minigame"
@@ -221,18 +228,65 @@ label read:
     #a memory mini game
     #followed by scene with baba yaga to establish character relationship development
     #
+    
     "memory minigame"
-    jump tasks
+
+    #once it is done:
+    "The witch seemed slightly less ornary to see the young woman had managed to make sense of the mess."
+    jump tasksAfterRead
 
 label spin:
     #a spindle minigame where you can spin yarn and make cloth
     #followed by scene with baba yaga to establish character relationship development
     "timer click minigame"
     call screen click_counter_game
-    screen hide
-    jump afterTasks
-    #jump tasks
-    
+    "After a long day of spinning yarn, [v] showed the older woman her progress."
+    "Baba Yaga sniffed in mild approval, glancing over the mountain of spool the young woman had managed to spin."
+    show ba at right
+    baba "Good enough..."
+    hide ba
+    "Her eyes briefly took in the state of the girl's hands."
+    show ba at right
+    baba "Up with you now. I'll have anothr task for you tomorrow at dawn."
+    hide ba
+    "[v] stood up from her seat."
+    show vas at left
+    v "But my father--"
+    hide vas
+    show ba at right
+    baba "Your father will be fine."
+    hide ba
+    "The witch waved her hand dismissively."
+    show vas at left
+    v "You don't understand. When I left him he had a chill and was bed ridden." 
+    v "He's unable to care for himself. If I don't return soon--"
+    hide vas
+    show ba at right
+    baba "As I said, he will be fine. Your father will live if you perform your tasks, girl."
+    baba "Now, you can sleep by the fire tonight. I expect you up and working at dawn."
+    baba "And lotion your hands with the balm on the mantle. I won't tolerate lackluster work from blistered soft hands."
+    hide ba
+    "[v] fell asleep by the fire that night, consumed by worried thoughts for her father."
+    "She prayed he would live through the night."
+    show vas at left
+    v "I'll be home soon, папа."
+    hide vas
+    "She whispered into the embers as she drifted into an exhausted sleep, the wind outside whistling a lullaby."
+    jump nextMorning
+
+label nextMorning:
+    "Upon the next morning, just as she had promised, the witch put [v] to work."
+    "The cool morning air was enough to chase off any lingering sleep from her body."
+    jump tasks2
+
+label tasks2:
+    "[baba] had decided to have her..."
+    menu:
+        "Forage":
+            jump forage
+        "Read":
+            jump read
+
 
 #rest of story after the tasks are completed:
 label afterTasks:
