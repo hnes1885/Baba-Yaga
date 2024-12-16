@@ -1,0 +1,10 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/script.rpy", line 69: 'Return' is not a keyword argument or valid child of the screen statement.
+    Return()
+          ^
+
+Ren'Py Version: Ren'Py 8.3.3.24111502
+Sun Dec 15 19:07:51 2024
