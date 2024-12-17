@@ -4,7 +4,7 @@
 # name of the character.
 define narrator = Character(what_italic=True) #narrator, script is always in italics to indicate
 define v = Character(_("Vasilisa"), color="#c8ffc8") #main character
-define f = Character(_("Ivan"), color="#c8c8ff") #main character's father
+#define f = Character(_("Ivan"), color="#c8c8ff") #main character's father
 define baba = Character("Baba Yaga")
 
 image vas = "images/Vasilisa_red.png"
@@ -54,7 +54,7 @@ transform rotate_rays:
     repeat
 
 screen click_counter_game:
-    image "Black.png"
+    image "bg fireplace.png"
     key "K_x" action If(count_clicks, Function(click_counter), NullAction())
     image "rays.png" xalign 0.5 yoffset -45 at rotate_rays
     image "Spindle.png" align(0.5, 0.4)
@@ -65,21 +65,21 @@ screen click_counter_game:
         if clicks < 10: # 0-9
             text "This is hardly enough. Baba Yaga will not be pleased with this amount." align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
             #imagebutton idle "play-again-button.png" align(0.5, 0.84) action Function(reset_click_counter) at button_hover
-            textbutton "Play Again" align(0.5,0.94) action Function(reset_click_counter)
+            #textbutton "Play Again" align(0.5,0.94) action Function(reset_click_counter)
         elif clicks < 20: # 10-19
             text "This is still not enough." align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
             #imagebutton idle "play-again-button.png" align(0.5, 0.84) action Function(reset_click_counter) at button_hover
-            textbutton "Play Again" align(0.5,0.94) action Function(reset_click_counter)
+            #textbutton "Play Again" align(0.5,0.94) action Function(reset_click_counter)
         elif clicks < 30: # 20-29
             text "I need just a bit more." align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
             #imagebutton idle "play-again-button.png" align(0.5, 0.84) action Function(reset_click_counter) at button_hover
-            textbutton "Play Again" align(0.5,0.94) action Function(reset_click_counter)
+            #textbutton "Play Again" align(0.5,0.94) action Function(reset_click_counter)
         else: # 30 or more.
             text "This should be enough" align(0.5, 0.75) outlines[(absolute(3.0), "#000000", 0, 0)] size 45
             textbutton "End" align(0.5, 0.84) action Return()
             
         #imagebutton idle "play-again-button.png" align(0.5, 0.94) action Function(reset_click_counter) at button_hover
-
+        textbutton "Play Again" align(0.5,0.94) action Function(reset_click_counter)
         #textbutton "End" align(0.5, 0.84) action Return()
 
     if timer:
@@ -223,10 +223,10 @@ label tasks:
             $ foraging += 1
             $ task += 1
             jump forage
-        "Read":
-            $ reading += 1
-            $ task += 1
-            jump read
+        #"Read":
+            #$ reading += 1
+            #$ task += 1
+            #jump read
         "Spin yarn":
             $ spinning += 1
             $ task += 1
@@ -239,27 +239,103 @@ label forage:
     #find a necklace in the forest --- will be able to take it with or leave it with baba as a promise to return one day
     #followed by scene with baba yaga to establish character relationship development
     #will need to create an inventory for this part of the game
-    "drag and drop minigame"
+    hide vas
     if foraging == 1:
+        show bg forest
+        with fade
         "After hours spent foraging for the plants [baba] had told her to gather, [v] saw something glinting in the orange rays of the evening sun."
         "It appeared to be a necklace of some kind."
         "[v] could only speculate as to how such a lovely item ended up in the midst of the forest."
-
+        show vas at left
         menu:
             "Take it":
                 $ necklace = True
-            "Leave it":
+                hide vas
                 jump afterForage
+            "Leave it":
+                hide vas
+                jump afterForage
+    if foraging > 1:
+        show vas at left
+        v "She has no need for me to forage any more. I should take up another task..."
+        hide vas
+        jump tasks
 
 label afterForage:
-    jump tasks
+    show bg fireplace
+    with fade
+    "When she returned at nightfall to the chicken legged hut, [v] was surprised to find a meal waiting on the table."
+    show ba at right
+    baba "Did you gather everything?"
+    hide ba
+    "[v] handed over her basket and the older woman nodded curtly in mild approval."
+    show ba at right
+    baba "Good. Now eat."
+    hide ba
+    "Hungry as she was, [v] did not protest."
+    "They ate in silence before [v] decided to chance speaking."
+    show vas at left
+    menu:
+        "Show [baba] the necklace":
+            hide vas
+            jump showNecklace
+        "Ask [baba] about herself":
+            v "Have you always lived here, in the forest?"
+            hide vas
+            "The witch glanced up at her, her gaze sharp and observant."
+            show ba at right
+            baba "For most of my life, yes."
+            hide ba
+            show vas at left
+            v "Have you always been alone?"
+            hide vas
+            "[v] realized only after the words had left her mouth how rude they had sounded."
+            "To her surprise, however, the woman only made a noise of mild disapproval."
+            show ba at right
+            baba "Every once in a while a brat like you comes along with need of something."
+            baba "I haven't had the opportunity to feel lonely with that kind of regular nuisance, if that's what you were implying."
+            hide ba
+            if task >= 3:
+                "[v] nodded and they finished their meal in silence before she spoke again."
+                jump afterTasks
+            else:
+                "[v] nodded and they finished their meal in silence before the darkness outside the hut sent them to rest for the night."
+                "She fell asleep by the fire hoping her father could somehow feel how much she missed him."
+                show bg fireplace
+                with fade
+                "The next morning, she rose early and set to work."
+                jump tasks
+
+label showNecklace:
+    "When [v] slipped the necklace from her pocket and onto the table, she saw a glint of recognition in the witch's eyes."
+    show ba at right
+    baba "Where did you get that?"
+    hide ba
+    "There was an edge to the woman's voice."
+    show vas at left
+    v "I found it in the forest when I was foraging. Is it yours?"
+    hide vas
+    "She pushed the necklace towards the woman, but [baba] hastily swiped it back towards the younger woman."
+    show ba at right
+    baba "No. Take it. Put it away."
+    hide ba
+    "[v] could see a flood of emotions in the witch's eyes brough on by the sight of the necklace: hurt, anger, sadness, regret, longing..."
+    "But she knew better than to push the issue."
+    "She slipped the beaded necklace back into her pocket."
+    if task >= 3:
+        "[v] nodded and they finished their meal in silence before she spoke again."
+        jump afterTasks
+    else:
+        "They finished their meal in silence before the darkness outside the hut sent them to rest for the night."
+        "She fell asleep by the fire hoping her father could somehow feel how much she missed him."
+        show bg fireplace
+        with fade
+        "The next morning, she rose early and set to work."
+        jump tasks
 
 label read:
     #a memory mini game
     #followed by scene with baba yaga to establish character relationship development
-    #
-    
-    "memory minigame"
 
     #once it is done:
     "The witch seemed slightly less ornary to see the young woman had managed to make sense of the mess."
@@ -269,7 +345,7 @@ label spin:
     #a spindle minigame where you can spin yarn and make cloth
     #followed by scene with baba yaga to establish character relationship development
     hide vas
-    if spinning == 1 and task < 4:
+    if spinning == 1:
         show ba at right
         baba "Spin, can you?"
         baba "Very well then. Prepare me at least 30 skeins of yarn by nightfall tomorrow or be gone by the time I return."
@@ -312,7 +388,7 @@ label spin:
         hide vas
         "She whispered into the embers as she drifted into an exhausted sleep, the wind outside whistling a lullaby."
         jump nextMorning
-    elif spinning == 2 and task < 4:
+    elif spinning == 2:
         "Again, [baba] put her to work. She was to spin another 30 skeins before nightfall..."
         call screen click_counter_game #call on minigame screen
         show bg fireplace
@@ -358,7 +434,7 @@ label spin:
         "After cleaning their dishes, [v] went to lay by the fire yet again and found a blanket beside the straw mat on the floor."
         "Wrapping herself in it and settling into to the warm embrace of the fire, she drifted off."
         jump finalMorning
-    elif spinning == 3 and task < 4:
+    elif spinning == 3:
         call screen click_counter_game #call on minigame screen
         show bg fireplace
         with fade
@@ -420,9 +496,11 @@ label afterTasks:
         "Thank you, косынка.":
             #add +1 to respect variable
             #add +1 to affection variable
+            hide vas
             $ affection += 2
             jump thankYou
         "And I have no wish to return so soon and labor under your boot yet again.":
+            hide vas
             #add +1 to respect variable
             $ respect += 1
             #add +1 to affection variable
@@ -445,10 +523,13 @@ label snark:
     "[baba]'s laugh was as harsh a bark as her yell, yet it carried with it hardly the same bite."
     show ba at right
     baba "Go on now, brat, while the night is still young."
+    hide ba
     jump thankYou
 
 label leaveNecklace:
-    if necklace == True and affection > 3:
+    if necklace == True and affection > 1:
+        show bg forest
+        with fade
         "[v] reached the edge of the witch's fence before looking back."
         "She felt in her pocket the familiar weight of the necklace she had found in the woods."
         menu:
@@ -463,13 +544,22 @@ label leaveNecklace:
         jump continueToFather
 
 label continueToFather:
+    show bg apothecary
+    with fade
+    "[v] returned to her village with the dawn of the next morning, the early rays of sun lighting her way as she exited the wood."
+    "It was a most peculiar thing to see that nearly no time at all had passed between her departure and return to the house."
+    "She did not know how it was possible, but she was thankful for it all the same."
+    "Her father recovered swiftly with the help of the brew [baba] had given her and before long, it was as if he had no illness in the first place."
     show bg forest
     with fade
-    "As she walked into the wood, [v] found herself strangely comforted with the idea that she would be able to find the witch again, should she ever need to."
+    "A certain time passed and [v]'s father was still well. Each day they both rose and tended to their shop, cooked their meals, and foraged just as they always had."
+    "[v] often thought back to her time spent with the witch when she harvested flora at the edge of the forest that skirted her home."
+    "She found herself strangely comforted with the idea that she would be able to find the witch again, should she ever need to."
     "She had no basis for this belief. It was simply a thought that felt as certain as the ground beneath her feet and the sky beyond her head."
     "[baba] would be there, should she ever need her."
     "Of this, she was certain."
     "{b}The End{/b}"
+    return
 
 #Bad ending
 label stayathome:
