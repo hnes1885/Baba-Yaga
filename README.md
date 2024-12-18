@@ -1,6 +1,7 @@
 # BabaYaga
 This repository is home to my final project in ECE1895 for which I am making a visual novel inspired by Slavic folklore.
 
+# Install Instructions:
 To play, install Ren'Py engine at https://www.renpy.org/latest.html
 
 Then download the files and place them in a directory that Ren'Py can access
